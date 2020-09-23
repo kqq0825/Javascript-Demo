@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script>
+        // =====example1========
+        // =====================
+        function downLoad() {
+            var myBlob = new Blob(["abcdefg"],{type: 'text/plan'});
+            console.log(myBlob)
+            var a = document.createElement("a")
+            a.download = "text.txt";
+            a.href = URL.createObjectURL(myBlob);
+            document.getElementById("downLoadUrl").innerText = a.href;
+            a.click();
+        }
+        // =====example2========
+        // =====================
+        function fileChange(file) {
+            var target = file.files[0];
+            console.log(target.type)
+            // text文件内容读取
+            if(target.type === 'text/plain'){
+                target.text().then(data=>{
+                    document.getElementById("readFile").innerText = data;
+                })
+            }else{
+                // 预览pdf
+                var url = URL.createObjectURL(target);
+                window.open(url);
+            }
+        }
+        // =====example3/4======
+        // =====================
+        function imgFileChange({files},type) {
+            var url;
+            var img;
+            var imgBox = document.getElementById("imgs")
+            for(var i = 0;i< files.length;i++){
+                if(type === 'blob-url'){
+                    url= URL.createObjectURL(files[i]);
+                    img = document.createElement('img')
+                    img.src = url;
+                    img.width = 200;
+                    img.height = 200;
+                    imgBox.append(img);
+                    img.onload = function() {
+                        URL.revokeObjectURL(img.src)
+                    }
+                }else{
+                    var reader = new FileReader()
+                    reader.readAsDataURL(files[i])
+                    reader.onload = function(result){
+                        img = document.createElement('img')
+                        img.src = reader.result;
+                        img.width = 200;
+                        img.height = 200;
+                        imgBox.append(img);
+                    }
+                }
+                
+            }
+        }
+    </script>
+</head>
+<body>
+    <h4>1.使用Blob实现文件下载</h4>
+    <button onclick="downLoad()">下载</button>
+    <p id="downLoadUrl"></p>
+    <hr />
+    <h4>2.使用Blob实现文件读取预览</h4>
+    <input id="file" type="file" onchange="fileChange(this)"></input>
+    <p id="readFile"></p>
+    <hr />
+    <h4>3.使用Blob URL实现图片本地预览</h4>
+    <input id="imgFile" type="file" onchange="imgFileChange(this,'blob-url')" multiple></input>
+    <br />
+    <h4>4.使用Data URL实现图片本地预览</h4>
+    <input id="imgFile" type="file" onchange="imgFileChange(this,'data-url')" multiple></input>
+    <div id="imgs"></div>
+    <h4>5.使用Canvas.toDataURL生成Data URL</h4>
+    <a href="./canvas.html">跳转canvas.html</a>
+</body>
+</html>

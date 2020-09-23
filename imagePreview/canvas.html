@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <p><button onclick="toDataUrl()">生成DataUrl</button></p>
+    <p><button onclick="toBlob()">生成Blob</button></p>
+    <canvas id="canvas" width="200" height="200"></canvas>
+    <img id="img" width="200" height="200">
+</body>
+<script>
+    var canvas = document.getElementById("canvas");
+    var context = canvas.getContext('2d');
+    context.font = '24px STheiti, SimHei';
+    context.fillText('Canvas Content', 24, 66);
+    context.fillRect(0, 0, 200, 400);
+    context.beginPath(); 
+    context.strokeStyle = "#fff"; 
+    context.lineWidth = "6";
+    context.arc(100, 100, 50, 0, Math.PI * 2, true);
+    context.closePath(); 
+    context.stroke();  
+    function toDataUrl() {
+        var url = canvas.toDataURL();
+        console.log(url)
+        document.getElementById("img").src = url
+    }
+    function toBlob() {
+        canvas.toBlob(function(blob) {
+            var url = URL.createObjectURL(blob);
+            document.getElementById("img").src = url
+        }, 'image/jpeg');
+    }
+</script>
+</html>
