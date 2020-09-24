@@ -50,15 +50,18 @@
                         URL.revokeObjectURL(img.src)
                     }
                 }else{
-                    var reader = new FileReader()
-                    reader.readAsDataURL(files[i])
-                    reader.onload = function(result){
-                        img = document.createElement('img')
-                        img.src = reader.result;
-                        img.width = 200;
-                        img.height = 200;
-                        imgBox.append(img);
-                    }
+                    (function(f) {
+                        var reader = new FileReader()
+                        reader.readAsDataURL(f)
+                        reader.onload = function(result){
+                            img = document.createElement('img')
+                            img.src = reader.result;
+                            img.width = 200;
+                            img.height = 200;
+                            imgBox.append(img);
+                        }
+                    }(files[i]))
+                    
                 }
                 
             }
